@@ -8,7 +8,7 @@
 
 import UIKit
 
-
+var dateCounter = 94
 
 class PortofolioViewController: UIViewController {
 
@@ -55,6 +55,10 @@ class PortofolioViewController: UIViewController {
                 portofolioStockAmount[i] = 0
             }
         }
+        
+        todayBlueChipPrice.removeAll()
+        todayMidCapPrice.removeAll()
+        todayPennyStockPrice.removeAll()
         
         tempNamaArray = []
         tempJumlahStockArray = []
@@ -157,25 +161,51 @@ class PortofolioViewController: UIViewController {
         let differenceInDay = calendar.dateComponents([.day], from: dateStart, to: dateEnd).day
         let balance = UserDefaults.standard.float(forKey: "balance")
         if balance > 0{
-            
             balanceLabel.text = "\(balance)"
         }else{
             balanceLabel.text = "0"
         }
-        
+        if(UserDefaults.standard.integer(forKey: "dateCountDown") == 0)
+        {
+            dateCounter = 94
+        }
+        else{
+            dateCounter = UserDefaults.standard.integer(forKey: "dateCountDown")
+        }
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        }
+        if(UserDefaults.standard.object(forKey: "lastLoginDate") != nil)
+        {
+            let dateStart = calendar.startOfDay(for: UserDefaults.standard.object(forKey: "lastLoginDate") as! Date)
+            let dateEnd = calendar.startOfDay(for: date)
+            
+            let differenceInDay = calendar.dateComponents([.day], from: dateStart, to: dateEnd).day
+            if(date != (UserDefaults.standard.object(forKey: "lastLoginDate") as! Date))
+            {
+                dateCounter -= differenceInDay!
+                UserDefaults.standard.set(dateCounter, forKey: "dateCountDown")
+                UserDefaults.standard.set(date, forKey: "lastLoginDate")
+            }
+            print("Difference in Day: ", dateCounter)
+        }
         for i in 0...9
         {
+            
             do {
                 let decodedBlueChip = try JSONDecoder().decode(Stock.self, from: blueChipJSON[i])
                 sortedTodayStock = decodedBlueChip.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
-                todayBlueChipPrice.append(Float(sortedTodayStock[94-differenceInDay!].open)!)
+                todayBlueChipPrice.append(Float(sortedTodayStock[dateCounter].open)!)
+                print("Hari ini: ", dateCounter)
+                print("sortedtodaystock: ", sortedTodayStock[dateCounter].open)
+                print("Harga bbca: ", todayBlueChipPrice[0])
                 
                 let decodedMidCap = try JSONDecoder().decode(Stock.self, from: midCapJSON[i])
                 sortedTodayStock = decodedMidCap.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
-                todayMidCapPrice.append(Float(sortedTodayStock[94-differenceInDay!].open)!)
+                todayMidCapPrice.append(Float(sortedTodayStock[dateCounter].open)!)
                 let decodedPennyStock = try JSONDecoder().decode(Stock.self, from: pennyStockJSON[i])
                 sortedTodayStock = decodedPennyStock.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
-                todayPennyStockPrice.append(Float(sortedTodayStock[94-differenceInDay!].open)!)
+                todayPennyStockPrice.append(Float(sortedTodayStock[dateCounter].open)!)
             } catch let err{
                 print("Gagal decode harga hari ini", err)
             }
@@ -201,6 +231,7 @@ class PortofolioViewController: UIViewController {
                     if((blueChipSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
                         totalMarketValue += Float(transaction.amount) * todayBlueChipPrice[blueChipSymbol.firstIndex(of: transaction.name!)!]
+                        print("Harga BBCA: ", todayBlueChipPrice[blueChipSymbol.firstIndex(of: transaction.name!)!])
                     }
                     if((midCapSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
@@ -243,7 +274,14 @@ class PortofolioViewController: UIViewController {
                 unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
             }
             netAssetLabel.text = "\(Float(balance) + totalMarketValue)"
-            
+            if(totalMarketValue == 0 && totalBuyValue != 0)
+            {
+                totalBuyValue += Float(String(unrealizedGainLossLabel
+                    .text!))!
+                totalBuyValLabel.text = "\(totalBuyValue)"
+                unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
+                unrealizedGainLossLabel.textColor = .white
+            }
         } catch  {
             print("Gagal Memanggil")
         }

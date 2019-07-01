@@ -14,8 +14,8 @@ class BlueChipController: UIViewController {
     @IBOutlet weak var blueChipTableView: UITableView!
     var titlePage = ""
     var money: Float = 0
-    var jsonCounter = 94
     var stockPercentage: Float = 0
+    var blueChipJsonCounter = 94
     var sortedStock: [TimeSeries.StockDate] = []
     var blueChipPrice: [Float] = []
     var blueChipPercentage: [Float] = []
@@ -28,8 +28,19 @@ class BlueChipController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         blueChipTableView.tableFooterView = UIView()
+        
         let date = Date()
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        }
         let calendar = Calendar.current
+        if(UserDefaults.standard.integer(forKey: "dateCountDown") == 0)
+        {
+            jsonCounter = 94
+        }
+        else{
+            blueChipJsonCounter = UserDefaults.standard.integer(forKey: "dateCountDown")
+        }
         if(UserDefaults.standard.object(forKey: "lastLoginDate") != nil)
         {
             let dateStart = calendar.startOfDay(for: UserDefaults.standard.object(forKey: "lastLoginDate") as! Date)
@@ -38,10 +49,15 @@ class BlueChipController: UIViewController {
             let differenceInDay = calendar.dateComponents([.day], from: dateStart, to: dateEnd).day
             if(date != (UserDefaults.standard.object(forKey: "lastLoginDate") as! Date))
             {
-                jsonCounter -= differenceInDay!
+                blueChipJsonCounter -= differenceInDay!
+                UserDefaults.standard.set(blueChipJsonCounter, forKey: "dateCountDown")
+                UserDefaults.standard.set(date, forKey: "lastLoginDate")
             }
+            print("Difference in Day: ", blueChipJsonCounter)
         }
-        UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        
+        
+        
         self.title = titlePage
         if self.title == "Blue Chip"{
             descriptionLabel.text = "Blue chip : denoting companies or their shares considered to be a reliable investment, though less secure than gilt-edged stock."
@@ -73,8 +89,8 @@ extension BlueChipController: UITableViewDelegate, UITableViewDataSource
                 let decodedBlueChip = try JSONDecoder().decode(Stock.self, from: blueChipJSON[indexPath.row])
                 sortedStock = decodedBlueChip.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
                 cell.stockSymbol.text = blueChipSymbol[indexPath.row]
-                blueChipPrice.append(Float(sortedStock[jsonCounter].open)!)
-                stockPercentage = (Float(sortedStock[jsonCounter].open)! - Float(sortedStock[jsonCounter+1].open)!) * 100 / Float(sortedStock[jsonCounter+1].open)!
+                blueChipPrice.append(Float(sortedStock[blueChipJsonCounter].open)!)
+                stockPercentage = (Float(sortedStock[blueChipJsonCounter].open)! - Float(sortedStock[blueChipJsonCounter+1].open)!) * 100 / Float(sortedStock[blueChipJsonCounter+1].open)!
                 blueChipPercentage.append(stockPercentage)
                 
             } catch let jsonErr{
@@ -87,8 +103,8 @@ extension BlueChipController: UITableViewDelegate, UITableViewDataSource
                 let decodedMidCap = try JSONDecoder().decode(Stock.self, from: midCapJSON[indexPath.row])
                 sortedStock = decodedMidCap.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
                 cell.stockSymbol.text = midCapSymbol[indexPath.row]
-                midCapPrice.append(Float(sortedStock[jsonCounter].open)!)
-                stockPercentage = (Float(sortedStock[jsonCounter].open)! - Float(sortedStock[jsonCounter+1].open)!) * 100 / Float(sortedStock[jsonCounter+1].open)!
+                midCapPrice.append(Float(sortedStock[blueChipJsonCounter].open)!)
+                stockPercentage = (Float(sortedStock[blueChipJsonCounter].open)! - Float(sortedStock[blueChipJsonCounter+1].open)!) * 100 / Float(sortedStock[blueChipJsonCounter+1].open)!
                 midCapPercentage.append(stockPercentage)
             } catch let jsonErr{
                 print("Error serializing json: ", jsonErr)
@@ -101,8 +117,8 @@ extension BlueChipController: UITableViewDelegate, UITableViewDataSource
                 let decodedPennyStock = try JSONDecoder().decode(Stock.self, from: pennyStockJSON[indexPath.row])
                 sortedStock = decodedPennyStock.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
                 cell.stockSymbol.text = pennyStockSymbol[indexPath.row]
-                pennyStockPrice.append(Float(sortedStock[jsonCounter].open)!)
-                stockPercentage = (Float(sortedStock[jsonCounter].open)! - Float(sortedStock[jsonCounter+1].open)!) * 100 / Float(sortedStock[jsonCounter+1].open)!
+                pennyStockPrice.append(Float(sortedStock[blueChipJsonCounter].open)!)
+                stockPercentage = (Float(sortedStock[blueChipJsonCounter].open)! - Float(sortedStock[blueChipJsonCounter+1].open)!) * 100 / Float(sortedStock[blueChipJsonCounter+1].open)!
                 pennyStockPercentage.append(stockPercentage)
                 
             } catch let jsonErr{
@@ -110,7 +126,7 @@ extension BlueChipController: UITableViewDelegate, UITableViewDataSource
             }
             
         }
-        cell.stockPrice.text = String(format: "%.2f", (Float(sortedStock[jsonCounter].open)!))
+        cell.stockPrice.text = String(format: "%.2f", (Float(sortedStock[blueChipJsonCounter].open)!))
         
         if(stockPercentage > 0)
         {

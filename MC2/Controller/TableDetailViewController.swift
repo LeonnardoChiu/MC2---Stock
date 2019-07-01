@@ -49,6 +49,35 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        var jsonCounter = 94
+        
+        let date = Date()
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        }
+        let calendar = Calendar.current
+        if(UserDefaults.standard.integer(forKey: "dateCountDown") == 0)
+        {
+            jsonCounter = 94
+        }
+        else{
+            jsonCounter = UserDefaults.standard.integer(forKey: "dateCountDown")
+        }
+        if(UserDefaults.standard.object(forKey: "lastLoginDate") != nil)
+        {
+            let dateStart = calendar.startOfDay(for: UserDefaults.standard.object(forKey: "lastLoginDate") as! Date)
+            let dateEnd = calendar.startOfDay(for: date)
+            
+            let differenceInDay = calendar.dateComponents([.day], from: dateStart, to: dateEnd).day
+            if(date != (UserDefaults.standard.object(forKey: "lastLoginDate") as! Date))
+            {
+                jsonCounter -= differenceInDay!
+                UserDefaults.standard.set(jsonCounter, forKey: "dateCountDown")
+                UserDefaults.standard.set(date, forKey: "lastLoginDate")
+            }
+            print("Difference in Day: ", jsonCounter)
+        }
+        
         var jsonForChart: Int
         if(blueChipSymbol.firstIndex(of: stockName) != nil)
         {
@@ -66,12 +95,12 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
         var sortedStock: [TimeSeries.StockDate] = []
         do {
             let decodedStock = try JSONDecoder().decode(Stock.self, from: blueChipJSON[jsonForChart])
-            sortedStock = decodedStock.timeSeries  .stockDates.sorted(by: { $0.date < $1.date })
+            sortedStock = decodedStock.timeSeries  .stockDates.sorted(by: { $0.date > $1.date })
         } catch {
             print("Fail to get API")
         }
         for i in 0...5 {
-            harga.append(Float(sortedStock[i].open)!)
+            harga.append(Float(sortedStock[jsonCounter+i].open)!)
             print(harga[i])
             //ratio += harga[i]
         }
@@ -120,12 +149,12 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
     func prepareLineChart(max: Float, min: Float) {
         let currentDate = Calendar.current.component(.day, from: date)
         let getDay = Int(currentDate)
-        day1.text = String(getDay-1)
-        day2.text = String(getDay-2)
-        day3.text = String(getDay-3)
-        day4.text = String(getDay-4)
-        day5.text = String(getDay-5)
-        day6.text = String(getDay-6)
+        day1.text = String(getDay)
+        day2.text = String(getDay-1)
+        day3.text = String(getDay-2)
+        day4.text = String(getDay-3)
+        day5.text = String(getDay-4)
+        day6.text = String(getDay-5)
         
         var price = max
         price1.text = String(format: "%.2f", price)

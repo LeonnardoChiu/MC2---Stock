@@ -8,6 +8,7 @@
 
 import UIKit
 
+var jsonCounter = 94
 
 class StockViewController: UIViewController {
 
@@ -18,10 +19,40 @@ class StockViewController: UIViewController {
     @IBOutlet weak var blueChipButton: UIButton!
     @IBOutlet weak var midCapButton: UIButton!
     @IBOutlet weak var pennyStockButton: UIButton!
+    
+    override func viewDidLoad() {
+        
+        
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         let date = Date()
-        UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        DispatchQueue.main.async {
+            UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        }
+        let calendar = Calendar.current
+        if(UserDefaults.standard.integer(forKey: "dateCountDown") == 0)
+        {
+            jsonCounter = 94
+        }
+        else{
+            jsonCounter = UserDefaults.standard.integer(forKey: "dateCountDown")
+        }
+        if(UserDefaults.standard.object(forKey: "lastLoginDate") != nil)
+        {
+            let dateStart = calendar.startOfDay(for: UserDefaults.standard.object(forKey: "lastLoginDate") as! Date)
+            let dateEnd = calendar.startOfDay(for: date)
+            
+            let differenceInDay = calendar.dateComponents([.day], from: dateStart, to: dateEnd).day
+            if(date != (UserDefaults.standard.object(forKey: "lastLoginDate") as! Date))
+            {
+                jsonCounter -= differenceInDay!
+                UserDefaults.standard.set(jsonCounter, forKey: "dateCountDown")
+                UserDefaults.standard.set(date, forKey: "lastLoginDate")
+            }
+            print("Difference in Day: ", jsonCounter)
+        }
         let balance = UserDefaults.standard.float(forKey: "balance")
         if balance > 0{
             
