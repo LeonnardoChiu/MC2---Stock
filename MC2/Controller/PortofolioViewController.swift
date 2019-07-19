@@ -273,7 +273,7 @@ extension PortofolioViewController: UITableViewDelegate, UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "PortofolioTableViewCell") as! PortofolioTableViewCell
-        
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
         
         cell.stockNameLabel.text = portofolioStockName[indexPath.row]
         cell.stockAmountLabel.text = "\(portofolioStockAmount[indexPath.row])"

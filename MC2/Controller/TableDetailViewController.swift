@@ -249,6 +249,7 @@ extension TableDetailViewController: UITableViewDelegate, UITableViewDataSource
         let formattedDate = format.string(from: date)
         
         cell.dateLabel.text = formattedDate
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.typeLabel.text = stockTransaction[indexPath.row].type
         cell.priceLabel.text = String(format: "+%.2f", stockTransaction[indexPath.row].price)
         cell.amountLabel.text = "\(stockTransaction[indexPath.row].amount)"
