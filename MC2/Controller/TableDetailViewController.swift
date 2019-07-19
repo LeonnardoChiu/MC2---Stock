@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 
-class TableDetailViewController: UIViewController {
+class TableDetailViewController: UIViewController, UITextFieldDelegate {
     let date = Date()
     let format = DateFormatter()
     var stockTransaction = [Transaction]()
@@ -36,6 +36,9 @@ class TableDetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        buyAmountTextField.delegate = self
+        sellAmountTextField.delegate = self
+        tableView.tableFooterView = UIView()
         buyAmountTextField.keyboardType = UIKeyboardType.numberPad
         sellAmountTextField.keyboardType = UIKeyboardType.numberPad
         totalBalanceLabel.text = "\(money)"
@@ -99,6 +102,14 @@ class TableDetailViewController: UIViewController {
         }
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
     @IBAction func buyButtonTapped(_ sender: Any) {
         let appDelegate = UIApplication.shared.delegate as? AppDelegate

@@ -37,6 +37,7 @@ class PortofolioViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
+        portofolioTableView.tableFooterView = UIView()
         if(portofolioStockAmount.count != 0)
         {
             for i in 0...portofolioStockAmount.count-1

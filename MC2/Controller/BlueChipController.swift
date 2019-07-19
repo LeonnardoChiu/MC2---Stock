@@ -11,6 +11,7 @@ import UIKit
 class BlueChipController: UIViewController {
     @IBOutlet weak var descriptionLabel: UILabel!
     
+    @IBOutlet weak var blueChipTableView: UITableView!
     var titlePage = ""
     var money: Float = 0
     var jsonCounter = 98
@@ -26,7 +27,7 @@ class BlueChipController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        blueChipTableView.tableFooterView = UIView()
         let date = Date()
         let calendar = Calendar.current
         if(UserDefaults.standard.object(forKey: "lastLoginDate") != nil)

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class DepositViewController: UIViewController {
+class DepositViewController: UIViewController, UITextFieldDelegate{
     @IBOutlet weak var moneyTextField: UITextField!
     @IBOutlet weak var balanceTotalLabel: UILabel!
     @IBOutlet weak var depositButton: UIButton!
@@ -16,6 +16,7 @@ class DepositViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        moneyTextField.delegate = self
         moneyTextField.keyboardType = UIKeyboardType.numberPad
         depositButton.isEnabled = false
         depositButton.alpha = 0.5
@@ -24,8 +25,14 @@ class DepositViewController: UIViewController {
         balanceTotalLabel.text = "\(balance)"
     }
     
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
     
-    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
     
     @IBAction func moneyTextFieldEditingChanged(_ sender: Any) {
         depositButton.isEnabled = true
