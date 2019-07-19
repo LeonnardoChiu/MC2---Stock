@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		68ECBF6922DC1E9C00CAF7CE /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECBF6822DC1E9C00CAF7CE /* Extension.swift */; };
+		68ECBF6F22E19D7000CAF7CE /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68ECBF6E22E19D7000CAF7CE /* InfoViewController.swift */; };
 		8A32EF0322D8457600EBC8BB /* DepositViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A32EF0222D8457600EBC8BB /* DepositViewController.swift */; };
 		8A32EF0522D84F2100EBC8BB /* StockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A32EF0422D84F2100EBC8BB /* StockViewController.swift */; };
 		8A32EF0722DD67BA00EBC8BB /* TableDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A32EF0622DD67BA00EBC8BB /* TableDetailViewController.swift */; };
@@ -31,6 +32,7 @@
 
 /* Begin PBXFileReference section */
 		68ECBF6822DC1E9C00CAF7CE /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		68ECBF6E22E19D7000CAF7CE /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
 		8A32EF0222D8457600EBC8BB /* DepositViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DepositViewController.swift; sourceTree = "<group>"; };
 		8A32EF0422D84F2100EBC8BB /* StockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StockViewController.swift; sourceTree = "<group>"; };
 		8A32EF0622DD67BA00EBC8BB /* TableDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableDetailViewController.swift; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				D249118522DD8EBD00C0789B /* TransactionCell.swift */,
 				D25620D722DECDAA00C27D36 /* PortofolioViewController.swift */,
 				8A32EF0822E00B4500EBC8BB /* PortofolioTableViewCell.swift */,
+				68ECBF6E22E19D7000CAF7CE /* InfoViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -208,6 +211,7 @@
 				D249FB8122D738EB00680BC1 /* stockAPIs.swift in Sources */,
 				D249FB8322D826CE00680BC1 /* PennyStockJSON.swift in Sources */,
 				D249FB6C22D4BCF600680BC1 /* ViewController.swift in Sources */,
+				68ECBF6F22E19D7000CAF7CE /* InfoViewController.swift in Sources */,
 				D2915E1D22DC271500BFB201 /* BlueChipController.swift in Sources */,
 				D25620D822DECDAA00C27D36 /* PortofolioViewController.swift in Sources */,
 				D249FB8722D8295D00680BC1 /* MidCapJSON.swift in Sources */,

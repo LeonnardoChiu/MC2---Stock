@@ -19,6 +19,7 @@ class PortofolioViewController: UIViewController {
     @IBOutlet weak var netAssetLabel: UILabel!
     @IBOutlet weak var portofolioTableView: UITableView!
     
+    
     var sortedTodayStock: [TimeSeries.StockDate] = []
     var todayBlueChipPrice: [Float] = []
     var todayMidCapPrice: [Float] = []
@@ -34,6 +35,15 @@ class PortofolioViewController: UIViewController {
     var portofolioStockName: [String] = []
     var portofolioStockAmount: [Int] = []
     
+    @IBAction func InfoButton(_ sender: AnyObject) {
+        
+        let popInfo = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "PopUpInfo") as! InfoViewController
+        self.addChild(popInfo)
+        popInfo.view.frame = self.view.frame
+        self.view.addSubview(popInfo.view)
+        popInfo.didMove(toParent: self)
+        
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -280,4 +290,6 @@ extension PortofolioViewController: UITableViewDelegate, UITableViewDataSource{
         
         return cell
     }
+    
+    
 }
