@@ -20,7 +20,14 @@ class StockViewController: UIViewController {
     @IBOutlet weak var pennyStockButton: UIButton!
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        let balance = UserDefaults.standard.integer(forKey: "balance")
+        let date = Date()
+        let calendar = Calendar.current
+        if(UserDefaults.standard.object(forKey: "lastLoginDate") != nil)
+        {
+            let dateStart = calendar.startOfDay(for: UserDefaults.standard.object(forKey: "lastLoginDate") as! Date)
+        }
+        UserDefaults.standard.set(date, forKey: "lastLoginDate")
+        let balance = UserDefaults.standard.float(forKey: "balance")
         if balance > 0{
             
             balanceTotalLabel.text = "\(balance)"

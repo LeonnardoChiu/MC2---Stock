@@ -112,6 +112,9 @@ class TableDetailViewController: UIViewController {
         transaction.date = Date()
         transaction.type = "Buy"
         
+        
+        print(transaction.price)
+        
         money -= Float(transaction.amount) * Float(transaction.price)
         totalBalanceLabel.text = "\(money)"
         UserDefaults.standard.set(Float(totalBalanceLabel.text!)!, forKey: "balance")
@@ -193,7 +196,7 @@ class TableDetailViewController: UIViewController {
         } catch  {
             print("gagal menyimpan")
         }
-        
+        print()
      }
     @IBAction func buyTextFieldEditingChanged(_ sender: Any) {
         buyButton.isEnabled = true
@@ -236,7 +239,7 @@ extension TableDetailViewController: UITableViewDelegate, UITableViewDataSource
         
         cell.dateLabel.text = formattedDate
         cell.typeLabel.text = stockTransaction[indexPath.row].type
-        cell.priceLabel.text = "\(stockTransaction[indexPath.row].price)"
+        cell.priceLabel.text = String(format: "+%.2f", stockTransaction[indexPath.row].price)
         cell.amountLabel.text = "\(stockTransaction[indexPath.row].amount)"
         
         return cell

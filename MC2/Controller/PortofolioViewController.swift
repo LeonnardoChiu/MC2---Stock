@@ -31,61 +31,100 @@ class PortofolioViewController: UIViewController {
     var tempJumlahStockArray:[Int] = []
     var temp = 0
     
+    var portofolioStockName: [String] = []
+    var portofolioStockAmount: [Int] = []
+    
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        if(portofolioStockAmount.count != 0)
+        {
+            for i in 0...portofolioStockAmount.count-1
+            {
+                portofolioStockAmount[i] = 0
+            }
+        }
+        
         tempNamaArray = []
         tempJumlahStockArray = []
-        jumlahArray = 1
+        jumlahArray = 0
         let appDelegate = UIApplication.shared.delegate as? AppDelegate
         
         let managedContext = appDelegate?.persistentContainer.viewContext
         
         do{
-        stockTransaction = try managedContext!.fetch(Transaction.fetchRequest())
-        
+            stockTransaction = try managedContext!.fetch(Transaction.fetchRequest())
             
-                if jumlahArray == 1{
-                    tempNamaArray.append(stockTransaction[0].name ?? "")
-                    if stockTransaction[0].type == "Buy"{
-                        tempJumlahStockArray.append(Int(stockTransaction[0].amount))
-                    }else if stockTransaction[0].type == "Sell"{
-                        tempJumlahStockArray.append(Int(stockTransaction[0].amount - (stockTransaction[0].amount * 2)))
+            for transaction in stockTransaction
+            {
+                if(transaction.type == "Buy")
+                {
+                    if(portofolioStockName.firstIndex(of: transaction.name!) == nil)
+                    {
+                        portofolioStockName.append(transaction.name!)
+                        portofolioStockAmount.append(Int(transaction.amount))
                     }
-                    jumlahArray += 1
+                    else
+                    {
+                        portofolioStockAmount[portofolioStockName.firstIndex(of: transaction.name!)!] += Int(transaction.amount)
+                    }
                 }
-                    for j in 1...stockTransaction.count-1 {
-                    for k in 0...jumlahArray-2{
-//                        print(j)
-//                        print(stockTransaction[j].name)
-//                        print("pemisah")
-//                        print(k)
-//                        print(tempNamaArray[k])
-//                        print("selesai")
-                        if temp == 0{
-                            if stockTransaction[j].name == tempNamaArray[k]{
-                                if stockTransaction[j].type == "Buy"{
-                                    tempJumlahStockArray[k] += Int(stockTransaction[j].amount)
-                                }else if stockTransaction[j].type == "Sell"{
-                                    tempJumlahStockArray[k] -= Int(stockTransaction[j].amount)
-                                }
-                                temp+=1
-                            }
-                        }
-                        print(temp)
-                        
+                else
+                {
+                    portofolioStockAmount[portofolioStockName.firstIndex(of: transaction.name!)!] -= Int(transaction.amount)
+                    if(portofolioStockAmount[portofolioStockName.firstIndex(of: transaction.name!)!] == 0)
+                    {
+                        portofolioStockAmount.remove(at: portofolioStockName.firstIndex(of: transaction.name!)!)
+                        portofolioStockName.remove(at: portofolioStockName.firstIndex(of: transaction.name!)!)
                     }
-                    if temp == 0{
-                        tempNamaArray.append(stockTransaction[j].name ?? "")
-                        if stockTransaction[j].type == "Buy"{
-                            tempJumlahStockArray.append(Int(stockTransaction[j].amount))
-                        }else if stockTransaction[j].type == "Sell"{
-                            tempJumlahStockArray.append(Int(stockTransaction[j].amount - stockTransaction[j].amount * 2))
-                        }
-                        jumlahArray+=1
-                    }
-                    temp = 0
                 }
+            }
+//            if jumlahArray < 1{
+//                print("ga ada isi")
+//            }
+//            else{
+//                if jumlahArray == 1{
+//                    tempNamaArray.append(stockTransaction[0].name ?? "")
+//                    if stockTransaction[0].type == "Buy"{
+//                        tempJumlahStockArray.append(Int(stockTransaction[0].amount))
+//                    }else if stockTransaction[0].type == "Sell"{
+//                        tempJumlahStockArray.append(Int(stockTransaction[0].amount - (stockTransaction[0].amount * 2)))
+//                    }
+//                    jumlahArray += 1
+//                }
+//                for j in 1...stockTransaction.count-1 {
+//                    for k in 0...jumlahArray-2{
+//                        //                        print(j)
+//                        //                        print(stockTransaction[j].name)
+//                        //                        print("pemisah")
+//                        //                        print(k)
+//                        //                        print(tempNamaArray[k])
+//                        //                        print("selesai")
+//                        if temp == 0{
+//                            if stockTransaction[j].name == tempNamaArray[k]{
+//                                if stockTransaction[j].type == "Buy"{
+//                                    tempJumlahStockArray[k] += Int(stockTransaction[j].amount)
+//                                }else if stockTransaction[j].type == "Sell"{
+//                                    tempJumlahStockArray[k] -= Int(stockTransaction[j].amount)
+//                                }
+//                                temp+=1
+//                            }
+//                        }
+//                        print(temp)
+//
+//                    }
+//                    if temp == 0{
+//                        tempNamaArray.append(stockTransaction[j].name ?? "")
+//                        if stockTransaction[j].type == "Buy"{
+//                            tempJumlahStockArray.append(Int(stockTransaction[j].amount))
+//                        }else if stockTransaction[j].type == "Sell"{
+//                            tempJumlahStockArray.append(Int(stockTransaction[j].amount - stockTransaction[j].amount * 2))
+//                        }
+//                        jumlahArray+=1
+//                    }
+//                    temp = 0
+//                }
+//            }
             
         } catch  {
             print("Gagal Memanggil")
@@ -180,6 +219,8 @@ class PortofolioViewController: UIViewController {
             }
             totalBuyValLabel.text = "\(totalBuyValue)"
             totalMarketValLabel.text = "\(totalMarketValue)"
+            print(totalBuyValue)
+            print(totalMarketValue)
             if totalMarketValue-totalBuyValue > 0 {
                 unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
                 unrealizedGainLossLabel.textColor = UIColor(displayP3Red: 0, green: 0.9, blue: 0, alpha: 1)
@@ -224,7 +265,8 @@ extension PortofolioViewController: UITableViewDelegate, UITableViewDataSource{
 //            }
 //        }
 //        return tableSize
-        return jumlahArray-1
+        //return jumlahArray-1
+        return portofolioStockName.count
         //            return stockTransaction.count
     }
     
@@ -232,8 +274,8 @@ extension PortofolioViewController: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "PortofolioTableViewCell") as! PortofolioTableViewCell
         
         
-        cell.stockNameLabel.text = tempNamaArray[indexPath.row]
-        cell.stockAmountLabel.text = "\(tempJumlahStockArray[indexPath.row])"
+        cell.stockNameLabel.text = portofolioStockName[indexPath.row]
+        cell.stockAmountLabel.text = "\(portofolioStockAmount[indexPath.row])"
         
         return cell
     }

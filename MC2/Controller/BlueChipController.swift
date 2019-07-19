@@ -107,7 +107,7 @@ extension BlueChipController: UITableViewDelegate, UITableViewDataSource
             }
             
         }
-        cell.stockPrice.text = sortedStock[jsonCounter].open
+        cell.stockPrice.text = String(format: "%.2f", (Float(sortedStock[jsonCounter].open)!))
         
         if(stockPercentage > 0)
         {
@@ -129,19 +129,19 @@ extension BlueChipController: UITableViewDelegate, UITableViewDataSource
             vc?.stockName = blueChipSymbol[indexPath.row]
             vc?.stockPrice = blueChipPrice[indexPath.row]
             vc?.stockPercentage = blueChipPercentage[indexPath.row]
-            vc!.money = Float(UserDefaults.standard.integer(forKey: "balance"))
+            vc!.money = UserDefaults.standard.float(forKey: "balance")
             self.navigationController?.pushViewController(vc!, animated: true)
         }else if self.title == "Mid-Cap"{
             vc?.stockName = midCapSymbol[indexPath.row]
             vc?.stockPrice = midCapPrice[indexPath.row]
             vc?.stockPercentage = midCapPercentage[indexPath.row]
-            vc!.money = Float(UserDefaults.standard.integer(forKey: "balance"))
+            vc!.money = UserDefaults.standard.float(forKey: "balance")
             self.navigationController?.pushViewController(vc!, animated: true)
         }else if self.title == "Penny Stock"{
             vc?.stockName = pennyStockSymbol[indexPath.row]
             vc?.stockPrice = pennyStockPrice[indexPath.row]
             vc?.stockPercentage = pennyStockPercentage[indexPath.row]
-            vc!.money = Float(UserDefaults.standard.integer(forKey: "balance"))
+            vc!.money = UserDefaults.standard.float(forKey: "balance")
             self.navigationController?.pushViewController(vc!, animated: true)
         }
         

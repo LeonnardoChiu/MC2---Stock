@@ -35,11 +35,12 @@ class DepositViewController: UIViewController {
     
     
     @IBAction func depositButtonTapped(_ sender: Any) {
-        print(balanceTotalLabel.text)
+       
         let balance:Int = Int(balanceTotalLabel.text!)!
         let moneyInput:Int = Int(moneyTextField.text!)!
         balanceTotalLabel.text = "\(balance + moneyInput)"
-        UserDefaults.standard.set(Int(balanceTotalLabel.text!)!, forKey: "balance")
+         print(balanceTotalLabel.text)
+        UserDefaults.standard.set(Float(balanceTotalLabel.text!)!, forKey: "balance")
         moneyTextField.text = ""
         depositButton.isEnabled = false
         depositButton.alpha = 0.5
