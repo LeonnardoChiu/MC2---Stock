@@ -47,10 +47,111 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var price4: UILabel!
     @IBOutlet weak var chartView: UIView!
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        var jsonForChart: Int
+        if(blueChipSymbol.firstIndex(of: stockName) != nil)
+        {
+            jsonForChart = blueChipSymbol.firstIndex(of: stockName)!
+        }
+        else if(midCapSymbol.firstIndex(of: stockName) != nil)
+        {
+            jsonForChart = midCapSymbol.firstIndex(of: stockName)!
+        }
+        else
+        {
+            jsonForChart = pennyStockSymbol.firstIndex(of: stockName)!
+        }
+        var harga: [Float] = []
+        var sortedStock: [TimeSeries.StockDate] = []
+        do {
+            let decodedStock = try JSONDecoder().decode(Stock.self, from: blueChipJSON[jsonForChart])
+            sortedStock = decodedStock.timeSeries  .stockDates.sorted(by: { $0.date < $1.date })
+        } catch {
+            print("Fail to get API")
+        }
+        
+        for i in 0...5 {
+            harga.append(Float(sortedStock[i].open)!)
+            print(harga[i])
+        }
+        let maxHarga = harga.max()!
+        let minHarga = harga.min()!
+        print("MAx = \(maxHarga)")
+        prepareLineChart(max: Float(maxHarga), min: Float(minHarga))
+        
+        var pointCoor: [Float] = []
+        var xStartPoint = 90
+        for i in 0...5 {
+            var getCoor:Float = (maxHarga - harga[i]) * 20 + 40
+            if getCoor > 160 {
+                getCoor = 160
+            }
+            pointCoor.append(getCoor)
+            generateCircle(xPoint: xStartPoint, yPoint: Int(pointCoor[i]))
+            if i > 0{
+                drawLineFromPoint(start: CGPoint(x: xStartPoint-50, y: Int(pointCoor[i-1])), toPoint: CGPoint(x: xStartPoint, y: Int(pointCoor[i])), ofColor: UIColor.init(displayP3Red: 242, green: 170, blue: 76, alpha: 1), inView: chartView)
+            }
+            xStartPoint = xStartPoint + 50
+            print("Koor ke \(i) = \(pointCoor[i])")
+        }
+    }
     
+    func prepareLineChart(max: Float, min: Float) {
+        let currentDate = Calendar.current.component(.day, from: date)
+        let getDay = Int(currentDate)
+        day1.text = String(getDay-1)
+        day2.text = String(getDay-2)
+        day3.text = String(getDay-3)
+        day4.text = String(getDay-4)
+        day5.text = String(getDay-5)
+        day6.text = String(getDay-6)
+        
+        var price = max
+        var priceMininum1 = min
+        price1.text = String(price)
+        price = price - (price*0.009)
+        price2.text = String(price)
+        price = price - (price*0.009)
+        price3.text =  String(price)
+        price = min
+        price4.text = String(price)
+        
+    }
+    
+    func generateCircle(xPoint: Int, yPoint: Int) {
+        let circlePath = UIBezierPath(arcCenter: CGPoint(x: xPoint, y: yPoint), radius: 5, startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
+        
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = circlePath.cgPath
+        shapeLayer.fillColor = #colorLiteral(red: 0.9987228513, green: 0.6511953473, blue: 0.1908171773, alpha: 1)
+        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        shapeLayer.lineWidth = 0.5
+        chartView.layer.addSublayer(shapeLayer)
+        
+    }
+    
+    func drawLineFromPoint(start : CGPoint, toPoint end:CGPoint, ofColor lineColor: UIColor, inView view:UIView) {
+        
+        //design the path
+        let path = UIBezierPath()
+        path.move(to: start)
+        path.addLine(to: end)
+        
+        //design path in layer
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.path = path.cgPath
+        shapeLayer.strokeColor = lineColor.cgColor
+        shapeLayer.lineWidth = 1.0
+        
+        view.layer.addSublayer(shapeLayer)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        
         buyAmountTextField.delegate = self
         sellAmountTextField.delegate = self
         tableView.tableFooterView = UIView()
@@ -115,87 +216,6 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
         } catch  {
             print("Gagal Memanggil")
         }
-        var harga: [Float] = []
-        var sortedStock: [TimeSeries.StockDate] = []
-        do {
-            let decodedStock = try JSONDecoder().decode(Stock.self, from: blueChipJSON[0])
-            sortedStock = decodedStock.timeSeries  .stockDates.sorted(by: { $0.date < $1.date })
-        } catch {
-            print("Fail to get API")
-        }
-        
-        for i in 0...5 {
-            harga.append(Float(sortedStock[i].open)!)
-            print(harga[i])
-        }
-        let maxHarga = harga.max()!
-        print("MAx = \(maxHarga)")
-        prepareLineChart(max: Float(maxHarga))
-        
-        var pointCoor: [Float] = []
-        var xStartPoint = 90
-        for i in 0...5 {
-            var getCoor:Float = (maxHarga - harga[i]) * 300 + 40
-            if getCoor > 160 {
-                getCoor = 160
-            }
-            pointCoor.append(getCoor)
-            generateCircle(xPoint: xStartPoint, yPoint: Int(pointCoor[i]))
-            if i > 0{
-                drawLineFromPoint(start: CGPoint(x: xStartPoint-50, y: Int(pointCoor[i-1])), toPoint: CGPoint(x: xStartPoint, y: Int(pointCoor[i])), ofColor: UIColor.init(displayP3Red: 242, green: 170, blue: 76, alpha: 1), inView: chartView)
-            }
-            xStartPoint = xStartPoint + 50
-            print("Koor ke \(i) = \(pointCoor[i])")
-        }
-    }
-    
-    func prepareLineChart(max: Float) {
-        let currentDate = Calendar.current.component(.day, from: date)
-        let getDay = Int(currentDate)
-        day1.text = String(getDay-1)
-        day2.text = String(getDay-2)
-        day3.text = String(getDay-3)
-        day4.text = String(getDay-4)
-        day5.text = String(getDay-5)
-        day6.text = String(getDay-6)
-        
-        var price = max
-        price1.text = String(price)
-        price = price - (price*0.005)
-        price2.text = String(price)
-        price = price - (price*0.005)
-        price3.text =  String(price)
-        price = price - (price*0.005)
-        price4.text = String(price)
-        
-    }
-    
-    func generateCircle(xPoint: Int, yPoint: Int) {
-        let circlePath = UIBezierPath(arcCenter: CGPoint(x: xPoint, y: yPoint), radius: 5, startAngle: CGFloat(0), endAngle: CGFloat(Double.pi * 2), clockwise: true)
-        
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = circlePath.cgPath
-        shapeLayer.fillColor = #colorLiteral(red: 0.9987228513, green: 0.6511953473, blue: 0.1908171773, alpha: 1)
-        shapeLayer.strokeColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        shapeLayer.lineWidth = 0.5
-        chartView.layer.addSublayer(shapeLayer)
-        
-    }
-    
-    func drawLineFromPoint(start : CGPoint, toPoint end:CGPoint, ofColor lineColor: UIColor, inView view:UIView) {
-        
-        //design the path
-        let path = UIBezierPath()
-        path.move(to: start)
-        path.addLine(to: end)
-        
-        //design path in layer
-        let shapeLayer = CAShapeLayer()
-        shapeLayer.path = path.cgPath
-        shapeLayer.strokeColor = lineColor.cgColor
-        shapeLayer.lineWidth = 1.0
-        
-        view.layer.addSublayer(shapeLayer)
     }
     
     //LINE CHART END HERE ...............

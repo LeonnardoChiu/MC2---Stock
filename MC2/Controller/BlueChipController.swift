@@ -14,7 +14,7 @@ class BlueChipController: UIViewController {
     @IBOutlet weak var blueChipTableView: UITableView!
     var titlePage = ""
     var money: Float = 0
-    var jsonCounter = 98
+    var jsonCounter = 94
     var stockPercentage: Float = 0
     var sortedStock: [TimeSeries.StockDate] = []
     var blueChipPrice: [Float] = []
