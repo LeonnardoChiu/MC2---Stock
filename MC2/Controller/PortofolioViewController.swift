@@ -155,7 +155,7 @@ class PortofolioViewController: UIViewController {
         let dateEnd = calendar.startOfDay(for: date)
         
         let differenceInDay = calendar.dateComponents([.day], from: dateStart, to: dateEnd).day
-        let balance = UserDefaults.standard.integer(forKey: "balance")
+        let balance = UserDefaults.standard.float(forKey: "balance")
         if balance > 0{
             
             balanceLabel.text = "\(balance)"
@@ -168,13 +168,14 @@ class PortofolioViewController: UIViewController {
             do {
                 let decodedBlueChip = try JSONDecoder().decode(Stock.self, from: blueChipJSON[i])
                 sortedTodayStock = decodedBlueChip.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
-                todayBlueChipPrice.append(Float(sortedTodayStock[98-differenceInDay!].open)!)
+                todayBlueChipPrice.append(Float(sortedTodayStock[94-differenceInDay!].open)!)
+                
                 let decodedMidCap = try JSONDecoder().decode(Stock.self, from: midCapJSON[i])
                 sortedTodayStock = decodedMidCap.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
-                todayMidCapPrice.append(Float(sortedTodayStock[98-differenceInDay!].open)!)
+                todayMidCapPrice.append(Float(sortedTodayStock[94-differenceInDay!].open)!)
                 let decodedPennyStock = try JSONDecoder().decode(Stock.self, from: pennyStockJSON[i])
                 sortedTodayStock = decodedPennyStock.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
-                todayPennyStockPrice.append(Float(sortedTodayStock[98-differenceInDay!].open)!)
+                todayPennyStockPrice.append(Float(sortedTodayStock[94-differenceInDay!].open)!)
             } catch let err{
                 print("Gagal decode harga hari ini", err)
             }
@@ -203,11 +204,11 @@ class PortofolioViewController: UIViewController {
                     }
                     if((midCapSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
-                        totalMarketValue += Float(transaction.amount) * todayBlueChipPrice[midCapSymbol.firstIndex(of: transaction.name!)!]
+                        totalMarketValue += Float(transaction.amount) * todayMidCapPrice[midCapSymbol.firstIndex(of: transaction.name!)!]
                     }
                     if((pennyStockSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
-                        totalMarketValue += Float(transaction.amount) * todayBlueChipPrice[pennyStockSymbol.firstIndex(of: transaction.name!)!]
+                        totalMarketValue += Float(transaction.amount) * todayPennyStockPrice[pennyStockSymbol.firstIndex(of: transaction.name!)!]
                     }
                 }
                 else
@@ -219,11 +220,11 @@ class PortofolioViewController: UIViewController {
                     }
                     if((midCapSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
-                        totalMarketValue -= Float(transaction.amount) * todayBlueChipPrice[midCapSymbol.firstIndex(of: transaction.name!)!]
+                        totalMarketValue -= Float(transaction.amount) * todayMidCapPrice[midCapSymbol.firstIndex(of: transaction.name!)!]
                     }
                     if((pennyStockSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
-                        totalMarketValue -= Float(transaction.amount) * todayBlueChipPrice[pennyStockSymbol.firstIndex(of: transaction.name!)!]
+                        totalMarketValue -= Float(transaction.amount) * todayPennyStockPrice[pennyStockSymbol.firstIndex(of: transaction.name!)!]
                     }
                 }
                 

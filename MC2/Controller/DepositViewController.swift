@@ -21,8 +21,13 @@ class DepositViewController: UIViewController, UITextFieldDelegate{
         depositButton.isEnabled = false
         depositButton.alpha = 0.5
         //User Defaults
-        let balance = UserDefaults.standard.integer(forKey: "balance")
-        balanceTotalLabel.text = "\(balance)"
+        let balance = UserDefaults.standard.float(forKey: "balance")
+        if balance > 0{
+            
+            balanceTotalLabel.text = "\(balance)"
+        }else{
+            balanceTotalLabel.text = "0"
+        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -43,8 +48,8 @@ class DepositViewController: UIViewController, UITextFieldDelegate{
     
     @IBAction func depositButtonTapped(_ sender: Any) {
        
-        let balance:Int = Int(balanceTotalLabel.text!)!
-        let moneyInput:Int = Int(moneyTextField.text!)!
+        let balance: Float = Float(balanceTotalLabel.text!)!
+        let moneyInput: Float = Float(moneyTextField.text!)!
         balanceTotalLabel.text = "\(balance + moneyInput)"
          print(balanceTotalLabel.text)
         UserDefaults.standard.set(Float(balanceTotalLabel.text!)!, forKey: "balance")

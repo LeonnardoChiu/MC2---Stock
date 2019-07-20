@@ -70,20 +70,40 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
         } catch {
             print("Fail to get API")
         }
-        
         for i in 0...5 {
             harga.append(Float(sortedStock[i].open)!)
             print(harga[i])
+            //ratio += harga[i]
         }
         let maxHarga = harga.max()!
         let minHarga = harga.min()!
+        
+        
         print("MAx = \(maxHarga)")
         prepareLineChart(max: Float(maxHarga), min: Float(minHarga))
         
         var pointCoor: [Float] = []
         var xStartPoint = 90
         for i in 0...5 {
-            var getCoor:Float = (maxHarga - harga[i]) * 20 + 40
+            var getCoor:Float = 0
+            if (maxHarga == harga[i])
+            {
+                getCoor = 40
+            }
+            else
+            if (minHarga == harga[i])
+            {
+                getCoor = 130
+            }
+            else if(harga[i] > (maxHarga + minHarga) / 2)
+            {
+                //getCoor = 85 - (harga[i] / ratio * 90)
+                getCoor = (maxHarga - harga[i]) * 90 / (maxHarga - minHarga) + 40
+            }
+            else if(harga[i] < (maxHarga + minHarga) / 2)
+            {
+                getCoor = (maxHarga - harga[i]) * 90 / (maxHarga - minHarga) + 40
+            }
             if getCoor > 160 {
                 getCoor = 160
             }
@@ -108,14 +128,13 @@ class TableDetailViewController: UIViewController, UITextFieldDelegate {
         day6.text = String(getDay-6)
         
         var price = max
-        var priceMininum1 = min
-        price1.text = String(price)
-        price = price - (price*0.009)
-        price2.text = String(price)
-        price = price - (price*0.009)
-        price3.text =  String(price)
+        price1.text = String(format: "%.2f", price)
+        price = min + (((max - min) / 3) * 2)
+        price2.text = String(format: "%.2f", price)
+        price = min + ((max - min) / 3)
+        price3.text = String(format: "%.2f", price)
         price = min
-        price4.text = String(price)
+        price4.text = String(format: "%.2f", price)
         
     }
     
@@ -369,7 +388,7 @@ extension TableDetailViewController: UITableViewDelegate, UITableViewDataSource
         cell.dateLabel.text = formattedDate
         cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.typeLabel.text = stockTransaction[indexPath.row].type
-        cell.priceLabel.text = String(format: "+%.2f", stockTransaction[indexPath.row].price)
+        cell.priceLabel.text = String(format: "%.2f", stockTransaction[indexPath.row].price)
         cell.amountLabel.text = "\(stockTransaction[indexPath.row].amount)"
         
         return cell
