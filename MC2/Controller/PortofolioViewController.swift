@@ -27,6 +27,7 @@ class PortofolioViewController: UIViewController {
     
     var stockTransaction = [Transaction]()
     
+    
     var jumlahArray = 1
     var tempNamaArray:[String] = []
     var tempJumlahStockArray:[Int] = []
@@ -196,9 +197,9 @@ class PortofolioViewController: UIViewController {
                 let decodedBlueChip = try JSONDecoder().decode(Stock.self, from: blueChipJSON[i])
                 sortedTodayStock = decodedBlueChip.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
                 todayBlueChipPrice.append(Float(sortedTodayStock[dateCounter].open)!)
-                print("Hari ini: ", dateCounter)
-                print("sortedtodaystock: ", sortedTodayStock[dateCounter].open)
-                print("Harga bbca: ", todayBlueChipPrice[0])
+                //print("Hari ini: ", dateCounter)
+                //print("sortedtodaystock: ", sortedTodayStock[dateCounter].open)
+                //print("Harga bbca: ", todayBlueChipPrice[0])
                 
                 let decodedMidCap = try JSONDecoder().decode(Stock.self, from: midCapJSON[i])
                 sortedTodayStock = decodedMidCap.timeSeries.stockDates.sorted(by: { $0.date > $1.date })
@@ -227,11 +228,14 @@ class PortofolioViewController: UIViewController {
                 if(transaction.type == "Buy")
                 {
                     totalBuyValue += Float(transaction.amount) * transaction.price
+                    print("transaction amout: ", transaction.amount)
+                    print("transaction price: ", transaction.price)
+                    print("totalbuyvalue: ", totalBuyValue)
                     
                     if((blueChipSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
                         totalMarketValue += Float(transaction.amount) * todayBlueChipPrice[blueChipSymbol.firstIndex(of: transaction.name!)!]
-                        print("Harga BBCA: ", todayBlueChipPrice[blueChipSymbol.firstIndex(of: transaction.name!)!])
+                        //print("Harga BBCA: ", todayBlueChipPrice[blueChipSymbol.firstIndex(of: transaction.name!)!])
                     }
                     if((midCapSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
@@ -245,6 +249,9 @@ class PortofolioViewController: UIViewController {
                 else
                 {
                     totalBuyValue -= Float(transaction.amount) * transaction.price
+                    print("transaction amout: ", transaction.amount)
+                    print("transaction price: ", transaction.price)
+                    print("totalbuyvalue: ", totalBuyValue)
                     if((blueChipSymbol.firstIndex(of: transaction.name!)) != nil)
                     {
                         totalMarketValue -= Float(transaction.amount) * todayBlueChipPrice[blueChipSymbol.firstIndex(of: transaction.name!)!]
@@ -260,10 +267,22 @@ class PortofolioViewController: UIViewController {
                 }
                 
             }
+            if(balance > UserDefaults.standard.float(forKey: "originalBalance"))
+            {
+                print("totalbuyvalue sebelum ditambah if: ", totalBuyValue)
+                print("original user default: ", UserDefaults.standard.float(forKey: "originalBalance"))
+                print("balance: ", balance)
+                print("balance - original: ", (balance - UserDefaults.standard.float(forKey: "originalBalance")))
+                UserDefaults.standard.set(Float(String(format: "%.2f", (balance - UserDefaults.standard.float(forKey: "originalBalance"))))!, forKey: "totalBuyValueNeutralizer")
+                //totalBuyValue = Float(String(format: "%.2f", totalBuyValue))! + Float(String(format: "%.2f", (balance - UserDefaults.standard.float(forKey: "originalBalance"))))!
+                UserDefaults.standard.set(balance, forKey: "originalBalance")
+                print("totalbuyvalue didalam if: ", totalBuyValue)
+            }
+            totalBuyValue = totalBuyValue + UserDefaults.standard.float(forKey: "totalBuyValueNeutralizer")
             totalBuyValLabel.text = "\(totalBuyValue)"
             totalMarketValLabel.text = "\(totalMarketValue)"
-            print(totalBuyValue)
-            print(totalMarketValue)
+            //print(totalBuyValue)
+            //print(totalMarketValue)
             if totalMarketValue-totalBuyValue > 0 {
                 unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
                 unrealizedGainLossLabel.textColor = UIColor(displayP3Red: 0, green: 0.9, blue: 0, alpha: 1)
@@ -274,14 +293,15 @@ class PortofolioViewController: UIViewController {
                 unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
             }
             netAssetLabel.text = "\(Float(balance) + totalMarketValue)"
-            if(totalMarketValue == 0 && totalBuyValue != 0)
-            {
-                totalBuyValue += Float(String(unrealizedGainLossLabel
-                    .text!))!
-                totalBuyValLabel.text = "\(totalBuyValue)"
-                unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
-                unrealizedGainLossLabel.textColor = .white
-            }
+//            if(totalMarketValue == 0 && totalBuyValue != 0)
+//            {
+//                totalBuyValue += Float(String(unrealizedGainLossLabel
+//                    .text!))!
+//                totalBuyValLabel.text = "\(totalBuyValue)"
+//                unrealizedGainLossLabel.text = "\(totalMarketValue-totalBuyValue)"
+//                unrealizedGainLossLabel.textColor = .white
+//            }
+            print("totalbuyvalue: ", totalBuyValue)
         } catch  {
             print("Gagal Memanggil")
         }
@@ -300,7 +320,12 @@ class PortofolioViewController: UIViewController {
 //        } catch  {
 //            print("Gagal Memanggil")
 //        }
+        if(Float(String(unrealizedGainLossLabel.text!)) == 0)
+        {
+            unrealizedGainLossLabel.textColor = .white
+        }
         portofolioTableView.reloadData()
+        
     }
     
 

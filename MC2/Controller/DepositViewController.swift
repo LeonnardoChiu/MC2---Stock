@@ -52,6 +52,7 @@ class DepositViewController: UIViewController, UITextFieldDelegate{
         let moneyInput: Float = Float(moneyTextField.text!)!
         balanceTotalLabel.text = "\(balance + moneyInput)"
          print(balanceTotalLabel.text)
+        UserDefaults.standard.set(balance + moneyInput, forKey: "originalBalance")
         UserDefaults.standard.set(Float(balanceTotalLabel.text!)!, forKey: "balance")
         moneyTextField.text = ""
         depositButton.isEnabled = false
