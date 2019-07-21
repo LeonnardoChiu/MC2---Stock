@@ -151,19 +151,22 @@
                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Vc7-IR-ula">
-                                <rect key="frame" x="374" y="88" width="35" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="INFO"/>
-                                <connections>
-                                    <action selector="InfoButton:" destination="A9l-Vj-Jfk" eventType="touchUpInside" id="QU4-b6-Hnz"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" red="0.062745098039215685" green="0.094117647058823528" blue="0.12549019607843137" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                         <viewLayoutGuide key="safeArea" id="2Mq-cg-gHV"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Portofolio" id="YwT-pk-LhS"/>
+                    <navigationItem key="navigationItem" title="Portofolio" id="YwT-pk-LhS">
+                        <barButtonItem key="rightBarButtonItem" style="plain" id="0Z3-TE-u9P">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Vc7-IR-ula">
+                                <rect key="frame" x="364" y="7" width="30" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" image="information"/>
+                                <connections>
+                                    <action selector="InfoButton:" destination="A9l-Vj-Jfk" eventType="touchUpInside" id="QU4-b6-Hnz"/>
+                                </connections>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="balanceLabel" destination="87u-cr-hOG" id="KQP-4W-aGx"/>
                         <outlet property="netAssetLabel" destination="LPG-uj-dsw" id="Rhy-hV-LZ1"/>
@@ -305,7 +308,7 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="QUx-tV-hrG">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="blueChip" translatesAutoresizingMaskIntoConstraints="NO" id="QUx-tV-hrG">
                                 <rect key="frame" x="20" y="244" width="374" height="150"/>
                                 <color key="backgroundColor" red="0.52202633499999995" green="0.96620899439999997" blue="0.32393442589999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -331,7 +334,7 @@
                                     <action selector="blueChipButtonTapped:" destination="JTW-pC-Rqk" eventType="touchUpInside" id="iU9-ZG-KJa"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Peh-HX-n69">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="MidCap" translatesAutoresizingMaskIntoConstraints="NO" id="Peh-HX-n69">
                                 <rect key="frame" x="20" y="419" width="374" height="150"/>
                                 <color key="backgroundColor" red="0.94901960780000005" green="0.66666666669999997" blue="0.29803921570000003" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <constraints>
@@ -339,7 +342,7 @@
                                     <constraint firstAttribute="height" constant="150" id="dMj-PU-eSH"/>
                                 </constraints>
                             </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="K5S-zW-ihy">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="penny" translatesAutoresizingMaskIntoConstraints="NO" id="K5S-zW-ihy">
                                 <rect key="frame" x="20" y="594" width="374" height="150"/>
                                 <color key="backgroundColor" name="controlAccentColor" catalog="System" colorSpace="catalog"/>
                                 <constraints>
@@ -539,10 +542,10 @@
             </objects>
             <point key="canvasLocation" x="1473.913043478261" y="-253.125"/>
         </scene>
-        <!--Nama Stock-->
+        <!--Table Detail View Controller-->
         <scene sceneID="y62-OX-psl">
             <objects>
-                <viewController storyboardIdentifier="TableDetailViewController" title="Nama Stock" id="mhb-UZ-oPR" customClass="TableDetailViewController" customModule="MC2" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="TableDetailViewController" id="mhb-UZ-oPR" customClass="TableDetailViewController" customModule="MC2" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NvS-XB-yZP">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1002,7 +1005,7 @@
         <scene sceneID="k2i-Dv-Rcw">
             <objects>
                 <navigationController id="gWw-5f-CiF" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Stock" id="daY-yV-Ys5"/>
+                    <tabBarItem key="tabBarItem" title="Stock" image="bar-graph-with-dollar-sign" id="daY-yV-Ys5"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="5xo-a9-xIL">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -1043,7 +1046,7 @@
         <scene sceneID="Gr2-Ob-lIS">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="nPb-KT-vSV" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Portofolio" id="0Be-ZY-mV8"/>
+                    <tabBarItem key="tabBarItem" title="Portofolio" image="portfolio" id="0Be-ZY-mV8"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" backIndicatorImage="Back" id="I6A-of-oqm">
                         <rect key="frame" x="0.0" y="44" width="414" height="44"/>
@@ -1067,6 +1070,12 @@
         <image name="Back" width="16" height="16"/>
         <image name="Chevron Right" width="13" height="21"/>
         <image name="Chevron right white" width="13" height="21"/>
+        <image name="MidCap" width="375" height="150"/>
+        <image name="bar-graph-with-dollar-sign" width="30" height="30"/>
+        <image name="blueChip" width="375" height="150"/>
+        <image name="information" width="30" height="30"/>
+        <image name="penny" width="375" height="150"/>
+        <image name="portfolio" width="30" height="26"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="32K-AV-Tcc"/>
